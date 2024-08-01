@@ -6,6 +6,8 @@ module org.example.workshopjavafxjdbc {
     requires com.dlsc.formsfx;
     requires jdk.compiler;
 
+    opens org.example.workshopjavafxjdbc.model.entities to javafx.base;
+
     opens org.example.workshopjavafxjdbc to javafx.fxml;
     opens org.example.workshopjavafxjdbc.gui to javafx.fxml;
 
