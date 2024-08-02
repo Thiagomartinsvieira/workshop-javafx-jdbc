@@ -5,6 +5,7 @@ module org.example.workshopjavafxjdbc {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires jdk.compiler;
+    requires java.sql;
 
     opens org.example.workshopjavafxjdbc.model.entities to javafx.base;
 
