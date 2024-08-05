@@ -13,12 +13,11 @@ import org.example.workshopjavafxjdbc.gui.util.Alerts;
 import org.example.workshopjavafxjdbc.gui.util.Constraints;
 import org.example.workshopjavafxjdbc.gui.util.Utils;
 import org.example.workshopjavafxjdbc.model.entities.Department;
+import org.example.workshopjavafxjdbc.model.excelptions.ValidationException;
 import org.example.workshopjavafxjdbc.model.services.DepartmentService;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class DepartmentFormController implements Initializable {
 
@@ -59,7 +58,8 @@ public class DepartmentFormController implements Initializable {
     public void onBtSaveAction(ActionEvent event) {
         if (entity == null) {
             throw new IllegalStateException("Entity was null");
-        } if (service == null) {
+        }
+        if (service == null) {
             throw new IllegalStateException("Service was null");
         }
         try {
@@ -67,7 +67,11 @@ public class DepartmentFormController implements Initializable {
             service.saveOrUpdate(entity);
             notifyDataChangeListeners();
             Utils.currentStage(event).close();
-        } catch (DbException e) {
+        }
+        catch (ValidationException e) {
+            setErrorMessages(e.getErrors());
+        }
+        catch (DbException e) {
             Alerts.showAlert("Error saving object", null, e.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -81,8 +85,18 @@ public class DepartmentFormController implements Initializable {
     private Department getFormData() {
         Department obj = new Department();
 
+        ValidationException exception = new ValidationException("Validation error");
+
         obj.setId(Utils.tryParseToInt(txtId.getText()));
+
+        if (txtName.getText() == null || txtName.getText().trim().equals("")) {
+            exception.addError("name", "Field can't be empty");
+        }
         obj.setName(txtName.getText());
+
+        if (exception.getErrors().size() > 0) {
+            throw exception;
+        }
 
         return obj;
     }
@@ -93,7 +107,7 @@ public class DepartmentFormController implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL url, ResourceBundle rb) {
         initializeNodes();
     }
 
@@ -103,10 +117,18 @@ public class DepartmentFormController implements Initializable {
     }
 
     public void updateFormData() {
-        if (entity == null){
-            throw new IllegalStateException(("Entity was null"));
+        if (entity == null) {
+            throw new IllegalStateException("Entity was null");
         }
         txtId.setText(String.valueOf(entity.getId()));
         txtName.setText(entity.getName());
+    }
+
+    private void setErrorMessages(Map<String, String> errors) {
+        Set<String> fields = errors.keySet();
+
+        if (fields.contains("name")) {
+            labelErrorName.setText(errors.get("name"));
+        }
     }
 }
