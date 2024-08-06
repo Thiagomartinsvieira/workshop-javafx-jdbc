@@ -67,7 +67,7 @@ public class SellerListController implements Initializable, DataChangeListeners 
     public void onBtNewAction(ActionEvent event) {
         Stage parentStage = Utils.currentStage(event);
         Seller obj = new Seller();
-        createDialogForm(obj, "/gui/SellerForm.fxml", parentStage);
+        createDialogForm(obj, "/org/example/workshopjavafxjdbc/gui/SellerForm.fxml", parentStage);
     }
 
     public void setSellerService(SellerService service) {
