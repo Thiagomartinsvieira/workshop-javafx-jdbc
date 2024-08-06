@@ -26,9 +26,9 @@ public class SellerDaoJDBC implements SellerDao {
         try {
             st = conn.prepareStatement(
                     "INSERT INTO seller "
-                    + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
-                    + "VALUES "
-                    + "(?, ?, ?, ?, ?)",
+                            + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+                            + "VALUES "
+                            + "(?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
 
             st.setString(1, obj.getName());
@@ -50,9 +50,11 @@ public class SellerDaoJDBC implements SellerDao {
             else {
                 throw new DbException("Unexpected error! No rows affected!");
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             throw new DbException(e.getMessage());
-        } finally {
+        }
+        finally {
             DB.closeStatement(st);
         }
     }
@@ -74,30 +76,31 @@ public class SellerDaoJDBC implements SellerDao {
             st.setInt(6, obj.getId());
 
             st.executeUpdate();
-
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             throw new DbException(e.getMessage());
-        } finally {
+        }
+        finally {
             DB.closeStatement(st);
         }
-
     }
 
     @Override
     public void deleteById(Integer id) {
-       PreparedStatement st = null;
-       try {
-           st = conn.prepareStatement("DELETE FROM seller WHERE id = ?");
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
 
-           st.setInt(1, id);
+            st.setInt(1, id);
 
-           st.executeUpdate();
-       } catch (SQLException e){
-           throw new DbException(e.getMessage());
-       } finally {
-           DB.closeStatement(st);
-       }
-
+            st.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -135,7 +138,7 @@ public class SellerDaoJDBC implements SellerDao {
         obj.setName(rs.getString("Name"));
         obj.setEmail(rs.getString("Email"));
         obj.setBaseSalary(rs.getDouble("BaseSalary"));
-        obj.setBirthDate(rs.getDate("BirthDate"));
+        obj.setBirthDate(new java.util.Date(rs.getTimestamp("BirthDate").getTime()));
         obj.setDepartment(dep);
         return obj;
     }
