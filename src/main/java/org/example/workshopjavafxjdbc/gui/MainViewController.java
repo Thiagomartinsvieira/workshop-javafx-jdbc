@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import org.example.workshopjavafxjdbc.HelloApplication;
 import org.example.workshopjavafxjdbc.gui.util.Alerts;
 import org.example.workshopjavafxjdbc.model.services.DepartmentService;
+import org.example.workshopjavafxjdbc.model.services.SellerService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,7 +30,10 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemSellerAction() {
-        System.out.println("onMenuSellerAction");
+        loadView("/org/example/workshopjavafxjdbc/gui/SellerList.fxml", (SellerListController controller) -> {
+            controller.setSellerService(new SellerService());
+            controller.updateTableView();
+        });
     }
 
     @FXML
